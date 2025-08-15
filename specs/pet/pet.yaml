@@ -1,0 +1,30 @@
+openapi: 3.0.3
+
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  version: 1.0.27
+
+tags:
+  - name: pet
+    description: Everything about your Pets
+    externalDocs:
+      description: Find out more
+      url: https://swagger.io
+
+paths:
+  /pet/findByStatus:
+    $ref: ./paths/findByStatus.yaml
+  /pet/findByTags:
+    $ref: ./paths/findByTags.yaml
+  /pet/{id}:
+    $ref: ./paths/detail.yaml
+  /pet/create:
+    $ref: ./paths/create.yaml
+  /pet/{id}/update:
+    $ref: ./paths/update.yaml
+  /pet/{id}/updatePetWithForm:
+    $ref: ./paths/updatePetWithForm.yaml
+  /pet/{Id}/delete:
+    $ref: ./paths/delete.yaml
+  /pet/{petId}/uploadImage:
+    $ref: ./paths/uploadImage.yaml

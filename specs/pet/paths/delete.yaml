@@ -1,0 +1,31 @@
+delete:
+  tags:
+    - pet
+  summary: Deletes a pet.
+  description: Delete a pet.
+  operationId: deletePet
+  parameters:
+    - name: api_key
+      in: header
+      description: ''
+      required: false
+      schema:
+        type: string
+    - name: petId
+      in: path
+      description: Pet id to delete
+      required: true
+      schema:
+        type: integer
+        format: int64
+  responses:
+    '200':
+      description: Pet deleted
+    '400':
+      description: Invalid pet value
+    '500':
+      description: Unexpected error
+  security:
+    - petstore_auth:
+        - write:pets
+        - read:pets
