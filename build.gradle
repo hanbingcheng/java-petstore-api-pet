@@ -1,3 +1,19 @@
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
+buildscript {
+	repositories {
+		mavenCentral()
+		maven { url "https://plugins.gradle.org/m2/" }
+		maven { url 'https://repo.spring.io/snapshot' }
+		maven { url 'https://repo.spring.io/milestone' }
+	}
+	dependencies {
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:3.3.2"
+		classpath "com.diffplug.spotless:spotless-plugin-gradle:6.23.3"
+		classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:6.0.4"
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.4'
@@ -45,6 +61,7 @@ dependencies {
 	implementation 'org.slf4j:slf4j-api'
 
 	// RDBMS
+	implementation 'software.aws.rds:aws-mysql-jdbc:1.1.11'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 
 	// OpenApi関連
@@ -76,4 +93,58 @@ spotbugs {
 	excludeFilter = file("$rootDir/spotbugs-exclude.xml")
 }
 
+// ソース参照設定
+sourceSets {
+	main {
+		java {
+			srcDir 'src/main/java'
+			// OASにて出力したコードを含める
+			srcDir "$buildDir/oas-generate/src/main/java"
+		}
+		resources {
+			srcDir 'src/main/resources'
+		}
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+processResources {
+	duplicatesStrategy = DuplicatesStrategy.WARN
+}
+
+// OpenApiによる自動生成
+task openApiGenerateUsers(type: GenerateTask) {
+	generatorName = "spring"
+	inputSpec = "$rootDir/specs/pet/pet.yaml"
+	outputDir = "${layout.buildDirectory.get().asFile}/oas-generate"
+	apiPackage = "com.example.petstore.api.pet.oas.api"
+	invokerPackage = "com.example.petstore.api.pet.oas.invoker"
+	modelPackage = "com.example.petstore.api.pet.oas.model"
+	configOptions = [
+			title                  : "pet",
+			groupId                : "com.example.petstore",
+			delegatePattern        : "true",
+			dateLibrary            : "java8-localdatetime",
+			hideGenerationTimestamp: "true",
+			serializableModel      : "true",
+			useTags                : "true",
+			useSpringBoot3         : "true",
+			"containerDefaultToNull": "true"
+	]
+	globalProperties = [
+			apis           : "",
+			models         : "",
+			supportingFiles: "ApiUtil.java,ApiKeyRequestInterceptor.java,ClientConfiguration.java"
+	]
+}
+
+task openApiGenerateAll(dependsOn: ['clean', 'openApiGenerateUsers']) {}
+
+// タスク制御
+compileJava.dependsOn tasks.openApiGenerateAll
 compileJava.dependsOn tasks.spotlessApply

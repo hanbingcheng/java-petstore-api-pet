@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.petstore.api.pet.domain.repository.PetRepository">
+    <resultMap id="petResultMap" type="com.example.petstore.api.pet.domain.model.PetEntity">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="status" column="status"/>
+        <association property="category" javaType="com.example.petstore.api.pet.domain.model.CategoryEntity">
+            <id property="id" column="category_id"/>
+            <result property="name" column="category_name"/>
+        </association>
+        <collection property="tags" ofType="com.example.petstore.api.pet.domain.model.TagEntity">
+            <id property="id" column="tag_id"/>
+            <result property="name" column="tag_name"/>
+        </collection>
+        <collection property="photoUrls" ofType="java.lang.String">
+            <result column="photo_url"/>
+        </collection>
+    </resultMap>
+
+    <select id="findByStatus" resultMap="petResultMap">
+        SELECT
+            p.*,
+            pc.name as category_name,
+            pt.id as tag_id,
+            pt.name as tag_name,
+            ph.url as photo_url
+        FROM
+            pets p
+        LEFT JOIN pet_categories pc
+            ON p.category_id = pc.id
+        LEFT JOIN pet_tag_mappings ptm
+            ON p.id = ptm.pet_id
+        LEFT JOIN pet_tags pt
+            ON ptm.tag_id = pt.id
+        LEFT JOIN pet_photos ph
+            ON p.id = ph.pet_id
+        WHERE
+            status = #{status}
+    </select>
+</mapper>
