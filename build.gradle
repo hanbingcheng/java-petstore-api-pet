@@ -1,19 +1,5 @@
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 
-buildscript {
-	repositories {
-		mavenCentral()
-		maven { url "https://plugins.gradle.org/m2/" }
-		maven { url 'https://repo.spring.io/snapshot' }
-		maven { url 'https://repo.spring.io/milestone' }
-	}
-	dependencies {
-		classpath "org.springframework.boot:spring-boot-gradle-plugin:3.3.2"
-		classpath "com.diffplug.spotless:spotless-plugin-gradle:6.23.3"
-		classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:6.0.4"
-	}
-}
-
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.4'
@@ -40,6 +26,7 @@ java {
 }
 
 repositories {
+    mavenLocal()
 	mavenCentral()
 }
 
@@ -76,6 +63,9 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // petstore
+    implementation 'com.example.petstore:api-common:0.0.2'
 }
 
 spotless {

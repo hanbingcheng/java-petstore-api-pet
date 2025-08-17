@@ -1,5 +1,6 @@
 package com.example.petstore.api.pet.domain.service;
 
+import com.example.petstore.api.common.logging.annotation.StartEndLog;
 import com.example.petstore.api.pet.domain.model.PetEntity;
 import com.example.petstore.api.pet.domain.repository.PetRepository;
 import com.example.petstore.api.pet.domain.service.dto.FindByStatusServiceInput;
@@ -14,6 +15,7 @@ public class FindByStatusService {
 
   private final PetRepository petRepository;
 
+  @StartEndLog
   public FindByStatusServiceOutput execute(FindByStatusServiceInput input) {
 
     System.out.println("処理開始しました");
