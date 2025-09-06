@@ -65,7 +65,9 @@ dependencies {
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 
     // petstore
-    implementation 'com.example.petstore:api-common:0.0.2'
+    implementation ('com.example.petstore:api-common:0.0.8') {
+		exclude module: 'mybatis-spring-boot-starter'
+	}
 }
 
 spotless {
@@ -124,7 +126,7 @@ task openApiGenerateUsers(type: GenerateTask) {
 			serializableModel      : "true",
 			useTags                : "true",
 			useSpringBoot3         : "true",
-			"containerDefaultToNull": "true"
+			containerDefaultToNull: "true"
 	]
 	globalProperties = [
 			apis           : "",

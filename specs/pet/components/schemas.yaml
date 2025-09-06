@@ -1,4 +1,4 @@
-Category:
+PetCategory:
   title: Pet category
   description: A category for a pet
   type: object
@@ -10,7 +10,7 @@ Category:
       type: string
       pattern: '^[a-zA-Z0-9]+[a-zA-Z0-9\.\-_]*[a-zA-Z0-9]+$'
 
-Tag:
+PetTag:
   title: Pet Tag
   description: A tag for a pet
   type: object
@@ -20,6 +20,19 @@ Tag:
       format: int64
     name:
       type: string
+
+PetStatus:
+  title: Pet Status
+  description: pet status in the store
+  type: string
+  enum:
+    - available
+    - pending
+    - sold
+  x-enum-varnames: # コード生成で使用される定数名を指定
+    - AVAILABLE
+    - PENDING
+    - SOLD
 
 Pet:
   title: a Pet
@@ -33,7 +46,7 @@ Pet:
       type: integer
       format: int64
     category:
-      $ref: '#/Category'
+      $ref: '#/PetCategory'
     name:
       type: string
       example: doggie
@@ -44,12 +57,6 @@ Pet:
     tags:
       type: array
       items:
-        $ref: '#/Tag'
+        $ref: '#/PetTag'
     status:
-      type: string
-      description: pet status in the store
-      deprecated: true
-      enum:
-        - available
-        - pending
-        - sold
+      $ref: '#/PetStatus'

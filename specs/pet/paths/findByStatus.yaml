@@ -11,11 +11,7 @@ get:
       required: true
       explode: true
       schema:
-        type: string
-        enum:
-          - available
-          - pending
-          - sold
+        $ref: '../components/schemas.yaml#/PetStatus'
         default: available
   responses:
     '200':
