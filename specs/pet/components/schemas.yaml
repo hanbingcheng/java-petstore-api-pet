@@ -60,3 +60,34 @@ Pet:
         $ref: '#/PetTag'
     status:
       $ref: '#/PetStatus'
+
+Pager:
+  description: ページング情報
+  type: object
+  properties:
+    total:
+      description: 検索結果の総件数
+      type: integer
+      format: int64
+    pages:
+      description: 検索結果の総ページ数
+      type: integer
+      format: int32
+    isFirstPage:
+      description: 最初のページかどうか
+      type: boolean
+    isLastPage:
+      description: 最後のページかどうか
+      type: boolean
+    pageNum:
+      description: 現在のページ番号
+      type: integer
+      format: int32
+    pageSize:
+      description: 1ページあたりの表示数
+      type: integer
+      format: int32
+    size:
+      description: 現在のページの実際の件数
+      type: integer
+      format: int32

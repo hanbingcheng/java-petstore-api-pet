@@ -50,6 +50,7 @@ dependencies {
 	// RDBMS
 	implementation 'software.aws.rds:aws-mysql-jdbc:1.1.11'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+	implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:2.1.1'
 
 	// OpenApi関連
 	implementation 'org.springframework.boot:spring-boot-starter-validation'

@@ -6,27 +6,21 @@
     <resultMap id="petResultMap" type="com.example.petstore.api.pet.domain.model.PetEntity">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
+        <result property="categoryId" column="category_id"/>
         <result property="status" column="status"/>
-        <association property="category" javaType="com.example.petstore.api.pet.domain.model.CategoryEntity">
-            <id property="id" column="category_id"/>
-            <result property="name" column="category_name"/>
-        </association>
-        <collection property="tags" ofType="com.example.petstore.api.pet.domain.model.TagEntity">
-            <id property="id" column="tag_id"/>
-            <result property="name" column="tag_name"/>
-        </collection>
-        <collection property="photoUrls" ofType="java.lang.String">
-            <result column="photo_url"/>
-        </collection>
+        <result property="categoryName" column="category_name" />
+        <result property="tagIdsString" column="tag_ids"/>
+        <result property="tagNamesString" column="tag_names"/>
+        <result property="photoUrlsString" column="photo_urls"/>
     </resultMap>
 
     <select id="findByStatus" resultMap="petResultMap">
         SELECT
             p.*,
             pc.name as category_name,
-            pt.id as tag_id,
-            pt.name as tag_name,
-            ph.url as photo_url
+            GROUP_CONCAT(DISTINCT pt.id ORDER BY pt.id SEPARATOR ',') as tag_ids,
+            GROUP_CONCAT(DISTINCT pt.name ORDER BY pt.id SEPARATOR ',') as tag_names,
+            GROUP_CONCAT(DISTINCT ph.url ORDER BY ph.id SEPARATOR ',') as photo_urls
         FROM
             pets p
         LEFT JOIN pet_categories pc
@@ -38,6 +32,8 @@
         LEFT JOIN pet_photos ph
             ON p.id = ph.pet_id
         WHERE
-            status = #{status}
+            p.status = #{status}
+        GROUP BY
+            p.id
     </select>
 </mapper>

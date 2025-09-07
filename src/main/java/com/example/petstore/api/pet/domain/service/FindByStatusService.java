@@ -9,6 +9,8 @@ import com.example.petstore.api.pet.domain.model.PetEntity;
 import com.example.petstore.api.pet.domain.repository.PetRepository;
 import com.example.petstore.api.pet.domain.service.dto.FindByStatusServiceInput;
 import com.example.petstore.api.pet.domain.service.dto.FindByStatusServiceOutput;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataAccessException;
@@ -23,6 +25,7 @@ public class FindByStatusService {
 
   @StartEndLog
   public FindByStatusServiceOutput execute(FindByStatusServiceInput input) {
+    PageHelper.startPage(input.getPageNum(), input.getPageSize());
     List<PetEntity> pets;
     try {
       pets = petRepository.findByStatus(input.getStatus().getValue());
@@ -30,6 +33,7 @@ public class FindByStatusService {
       logger.error(CommonLogId.DB_ACCESS_ERROR, ex, "PetRepository", "findByStatus");
       throw new SystemException(CommonErrorCode.DBACCESS_ERROR);
     }
-    return FindByStatusServiceOutput.builder().pets(pets).build();
+    PageInfo<PetEntity> pageInfo = new PageInfo<>(pets);
+    return FindByStatusServiceOutput.builder().pageInfo(pageInfo).build();
   }
 }

@@ -8,4 +8,6 @@ import lombok.Data;
 @Builder
 public class FindByStatusServiceInput {
   private PetStatus status;
+  private int pageNum;
+  private int pageSize;
 }

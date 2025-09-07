@@ -4,9 +4,8 @@ import com.example.petstore.api.pet.domain.service.FindByStatusService;
 import com.example.petstore.api.pet.domain.service.dto.FindByStatusServiceInput;
 import com.example.petstore.api.pet.domain.service.dto.FindByStatusServiceOutput;
 import com.example.petstore.api.pet.oas.api.PetApiDelegate;
-import com.example.petstore.api.pet.oas.model.Pet;
+import com.example.petstore.api.pet.oas.model.FindPetsByStatusResponseBody;
 import com.example.petstore.api.pet.oas.model.PetStatus;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,9 @@ public class PetApiDelegateImpl implements PetApiDelegate {
   private final FindByStatusService findByStatusService;
 
   @Override
-  public ResponseEntity<List<Pet>> findPetsByStatus(PetStatus status) {
-    FindByStatusServiceInput input = findByStatusMapper.map(status);
+  public ResponseEntity<FindPetsByStatusResponseBody> findPetsByStatus(
+      PetStatus status, Integer pageNum, Integer pageSize) {
+    FindByStatusServiceInput input = findByStatusMapper.map(status, pageNum, pageSize);
     FindByStatusServiceOutput output = findByStatusService.execute(input);
     return new ResponseEntity<>(findByStatusMapper.map(output), HttpStatus.OK);
   }
