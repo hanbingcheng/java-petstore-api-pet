@@ -14,15 +14,32 @@ get:
         type: array
         items:
           type: string
+    - name: pageNum
+      in: query
+      description: ページ番号
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+      example: 1
+    - name: pageSize
+      in: query
+      description: 1ページに表示する件数
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+
   responses:
     '200':
       description: successful operation
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: '../components/schemas.yaml#/Pet'
+            $ref: '#/respononses/FindPetsByTagsResponseBody'
     '400':
       description: Invalid tag value
     '500':
@@ -31,3 +48,14 @@ get:
       - petstore_auth:
         - write:pets
         - read:pets
+
+respononses:
+  FindPetsByTagsResponseBody:
+    type: object
+    properties:
+      pager:
+        $ref: '../components/schemas.yaml#/Pager'
+      list:
+        type: array
+        items:
+          $ref: '../components/schemas.yaml#/Pet'

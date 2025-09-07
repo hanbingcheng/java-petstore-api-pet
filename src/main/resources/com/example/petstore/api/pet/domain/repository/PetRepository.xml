@@ -36,4 +36,39 @@
         GROUP BY
             p.id
     </select>
+
+    <select id="findByTags" resultMap="petResultMap">
+        SELECT
+        p.*,
+        pc.name as category_name,
+        GROUP_CONCAT(DISTINCT pt.id ORDER BY pt.id SEPARATOR ',') as tag_ids,
+        GROUP_CONCAT(DISTINCT pt.name ORDER BY pt.id SEPARATOR ',') as tag_names,
+        GROUP_CONCAT(DISTINCT ph.url ORDER BY ph.id SEPARATOR ',') as photo_urls
+        FROM
+        pets p
+        LEFT JOIN pet_categories pc
+        ON p.category_id = pc.id
+        LEFT JOIN pet_tag_mappings ptm
+        ON p.id = ptm.pet_id
+        LEFT JOIN pet_tags pt
+        ON ptm.tag_id = pt.id
+        LEFT JOIN pet_photos ph
+        ON p.id = ph.pet_id
+        WHERE
+            EXISTS (
+                SELECT 1
+                FROM
+                    pet_tag_mappings ptm2,
+                    pet_tags pt2
+                WHERE
+                    ptm2.tag_id = pt2.id
+                AND ptm2.pet_id = p.id
+                AND pt2.name IN
+                <foreach item="name" collection="tagNames" open="(" separator="," close=")">
+                    #{name}
+                </foreach>
+            )
+        GROUP BY
+        p.id
+    </select>
 </mapper>
