@@ -1,0 +1,53 @@
+ErrorResponse:
+  description: エラーレスポンス
+  type: object
+  properties:
+    errorCode:
+      description: 失敗時のエラーコード
+      type: string
+      example: "Z001MW00001"
+      nullable: true
+    message:
+      description: エラーメッセージ
+      type: string
+      example: "メッセージ"
+      nullable: false
+    path:
+      description: APIパス
+      type: string
+      example: "/pet/xxx"
+      nullable: false
+    timestamp:
+      description: 呼び出し日時
+      type: string
+      example: "2025-09-08T00:33:18.9573783"
+      nullable: false
+
+ErrorResponseBadRequest:
+  description: 項目バリデーションエラー時のエラーレスポンス
+  allOf:
+    - $ref: '#/ErrorResponse'
+    - type: object
+      properties:
+        fieldErrors:
+          $ref: '#/FieldError'
+
+FieldError:
+  descriptoin: エラー項目情報
+  type: object
+  properties:
+    field:
+      description: エラー項目名
+      type: string
+      example: "id"
+      nullable: false
+    message:
+      description: エラーメッセージ
+      type: string
+      example: "メッセージ"
+      nullable: false
+    rejectedValue:
+      description: エラーになった価
+      type: string
+      example: "xxx"
+      nullable: true

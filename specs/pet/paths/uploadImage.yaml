@@ -33,10 +33,22 @@ post:
             $ref: '#/components/schemas/UploadImageResponse'
     '400':
       description: No file uploaded
+      content:
+        application/json:
+          schema:
+            $ref: '../components/error.yaml#/ErrorResponseBadRequest'
     '404':
       description: Pet not found
+      content:
+        application/json:
+          schema:
+            $ref: '../components/error.yaml#/ErrorResponse'
     '500':
       description: Unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../components/error.yaml#/ErrorResponse'
   security:
     - petstore_auth:
         - write:pets

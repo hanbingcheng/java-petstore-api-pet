@@ -21,6 +21,7 @@ get:
         type: integer
         format: int32
         minimum: 1
+        default: 1
       example: 1
     - name: pageSize
       in: query
@@ -31,6 +32,7 @@ get:
         format: int32
         minimum: 1
         maximum: 100
+        default: 10
   responses:
     '200':
       description: successful operation
@@ -40,8 +42,16 @@ get:
             $ref: '#/respononses/FindPetsByStatusResponseBody'
     '400':
       description: Invalid status/tag value
+      content:
+        application/json:
+          schema:
+            $ref: '../components/error.yaml#/ErrorResponseBadRequest'
     '500':
       description: Unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../components/error.yaml#/ErrorResponse'
   security:
       - petstore_auth:
         - write:pets

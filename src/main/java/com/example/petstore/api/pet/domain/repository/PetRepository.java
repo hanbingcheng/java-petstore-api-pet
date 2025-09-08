@@ -9,4 +9,6 @@ public interface PetRepository {
   List<PetEntity> findByStatus(String status);
 
   List<PetEntity> findByTags(List<String> tagNames);
+
+  PetEntity getPetById(long petId);
 }

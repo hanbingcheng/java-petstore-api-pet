@@ -41,9 +41,17 @@ get:
           schema:
             $ref: '#/respononses/FindPetsByTagsResponseBody'
     '400':
-      description: Invalid tag value
+      description: Invalid status/tag value
+      content:
+        application/json:
+          schema:
+            $ref: '../components/error.yaml#/ErrorResponseBadRequest'
     '500':
       description: Unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '../components/error.yaml#/ErrorResponse'
   security:
       - petstore_auth:
         - write:pets

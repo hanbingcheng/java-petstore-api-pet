@@ -7,33 +7,29 @@ import com.example.petstore.api.common.errorhandler.constant.CommonErrorCode;
 import com.example.petstore.api.common.errorhandler.exception.SystemException;
 import com.example.petstore.api.pet.domain.model.PetEntity;
 import com.example.petstore.api.pet.domain.repository.PetRepository;
-import com.example.petstore.api.pet.domain.service.dto.FindByTagsServiceInput;
-import com.example.petstore.api.pet.domain.service.dto.FindByTagsServiceOutput;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import java.util.List;
+import com.example.petstore.api.pet.domain.service.dto.GetPetByIdServiceInput;
+import com.example.petstore.api.pet.domain.service.dto.GetPetByIdServiceOutput;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class FindByTagsService {
+public class GetPetByIdService {
 
   private final AppLogger logger;
   private final PetRepository petRepository;
 
   @StartEndLog
-  public FindByTagsServiceOutput execute(FindByTagsServiceInput input) {
-    PageHelper.startPage(input.getPageNum(), input.getPageSize());
-    List<PetEntity> pets;
+  public GetPetByIdServiceOutput execute(GetPetByIdServiceInput input) {
+
+    PetEntity pet;
     try {
-      pets = petRepository.findByTags(input.getTags());
+      pet = petRepository.getPetById(input.getPetId());
     } catch (DataAccessException ex) {
-      logger.error(CommonLogId.DB_ACCESS_ERROR, ex, "PetRepository", "findByTags");
+      logger.error(CommonLogId.DB_ACCESS_ERROR, ex, "PetRepository", "getPetById");
       throw new SystemException(CommonErrorCode.DBACCESS_ERROR);
     }
-    PageInfo<PetEntity> pageInfo = new PageInfo<>(pets);
-    return FindByTagsServiceOutput.builder().pageInfo(pageInfo).build();
+    return GetPetByIdServiceOutput.builder().pet(pet).build();
   }
 }

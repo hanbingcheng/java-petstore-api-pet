@@ -3,6 +3,8 @@ openapi: 3.0.3
 info:
   title: Swagger Petstore - OpenAPI 3.0
   version: 1.0.27
+servers:
+  - url: http://localhost:8080
 
 tags:
   - name: pet
