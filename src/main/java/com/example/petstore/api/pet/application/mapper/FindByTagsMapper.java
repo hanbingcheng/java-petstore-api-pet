@@ -2,6 +2,7 @@ package com.example.petstore.api.pet.application.mapper;
 
 import com.example.petstore.api.pet.domain.service.dto.FindByTagsServiceInput;
 import com.example.petstore.api.pet.domain.service.dto.FindByTagsServiceOutput;
+import com.example.petstore.api.pet.domain.support.ValidationSupport;
 import com.example.petstore.api.pet.oas.model.*;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -12,8 +13,10 @@ import org.springframework.stereotype.Component;
 public class FindByTagsMapper {
 
   private final CommonMapper commonMapper;
+  private final ValidationSupport validationSupport;
 
   public FindByTagsServiceInput map(List<String> tags, Integer pageNum, Integer pageSize) {
+    validationSupport.validateTagNames(tags);
     return FindByTagsServiceInput.builder().tags(tags).pageNum(pageNum).pageSize(pageSize).build();
   }
 
@@ -21,7 +24,7 @@ public class FindByTagsMapper {
 
     FindPetsByTagsResponseBody responseBody = new FindPetsByTagsResponseBody();
     responseBody.setPager(commonMapper.mapPager(output.getPageInfo()));
-    responseBody.setList(commonMapper.mapPets(output.getPageInfo()));
+    responseBody.setList(commonMapper.mapPets(output.getPageInfo(), output.getPetTagMappings()));
     return responseBody;
   }
 }

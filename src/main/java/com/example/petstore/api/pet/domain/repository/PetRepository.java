@@ -8,7 +8,13 @@ import org.apache.ibatis.annotations.Mapper;
 public interface PetRepository {
   List<PetEntity> findByStatus(String status);
 
-  List<PetEntity> findByTags(List<String> tagNames);
+  List<PetEntity> findByTags(List<Integer> tagIds);
 
   PetEntity getPetById(long petId);
+
+  void insert(PetEntity pet);
+
+  void update(PetEntity pet);
+
+  void delete(long id);
 }

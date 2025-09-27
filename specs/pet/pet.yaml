@@ -24,9 +24,7 @@ paths:
     $ref: ./paths/create.yaml
   /pet/{id}/update:
     $ref: ./paths/update.yaml
-  /pet/{id}/updatePetWithForm:
-    $ref: ./paths/updatePetWithForm.yaml
-  /pet/{Id}/delete:
+  /pet/{id}/delete:
     $ref: ./paths/delete.yaml
-  /pet/{petId}/uploadImage:
+  /pet/{id}/uploadImage:
     $ref: ./paths/uploadImage.yaml

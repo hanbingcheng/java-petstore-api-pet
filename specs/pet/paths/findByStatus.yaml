@@ -39,7 +39,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '#/respononses/FindPetsByStatusResponseBody'
+            $ref: '#/responseBodies/FindPetsByStatusResponseBody'
     '400':
       description: Invalid status/tag value
       content:
@@ -57,7 +57,7 @@ get:
         - write:pets
         - read:pets
 
-respononses:
+responseBodies:
   FindPetsByStatusResponseBody:
     type: object
     properties:

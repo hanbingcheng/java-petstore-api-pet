@@ -44,6 +44,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jetty'
 	implementation 'org.springframework.boot:spring-boot-autoconfigure'
 
+	// cache
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	implementation 'com.github.ben-manes.caffeine:caffeine:3.2.2'
+
 	// logging
 	implementation 'org.slf4j:slf4j-api'
 
@@ -66,7 +70,7 @@ dependencies {
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 
     // petstore
-    implementation ('com.example.petstore:api-common:0.0.8') {
+    implementation ('com.example.petstore:api-common:0.0.9') {
 		exclude module: 'mybatis-spring-boot-starter'
 	}
 }

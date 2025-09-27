@@ -9,89 +9,106 @@
         <result property="categoryId" column="category_id"/>
         <result property="status" column="status"/>
         <result property="categoryName" column="category_name" />
-        <result property="tagIdsString" column="tag_ids"/>
-        <result property="tagNamesString" column="tag_names"/>
-        <result property="photoUrlsString" column="photo_urls"/>
+        <result property="tagIds" column="tag_ids" typeHandler="com.example.petstore.api.common.base.converter.mybatis.Json2ListTypeHandler"/>
+        <result property="photoUrls" column="photo_urls" typeHandler="com.example.petstore.api.common.base.converter.mybatis.Json2ListTypeHandler"/>
     </resultMap>
 
     <select id="findByStatus" resultMap="petResultMap">
         SELECT
             p.*,
-            pc.name as category_name,
-            GROUP_CONCAT(DISTINCT pt.id ORDER BY pt.id SEPARATOR ',') as tag_ids,
-            GROUP_CONCAT(DISTINCT pt.name ORDER BY pt.id SEPARATOR ',') as tag_names,
-            GROUP_CONCAT(DISTINCT ph.url ORDER BY ph.id SEPARATOR ',') as photo_urls
+            pc.name as category_name
         FROM
             pets p
-        LEFT JOIN pet_categories pc
+        INNER JOIN pet_categories pc
             ON p.category_id = pc.id
-        LEFT JOIN pet_tag_mappings ptm
-            ON p.id = ptm.pet_id
-        LEFT JOIN pet_tags pt
-            ON ptm.tag_id = pt.id
-        LEFT JOIN pet_photos ph
-            ON p.id = ph.pet_id
         WHERE
             p.status = #{status}
-        GROUP BY
-            p.id
+        AND
+            p.delete_flg = 0
     </select>
 
     <select id="findByTags" resultMap="petResultMap">
         SELECT
-        p.*,
-        pc.name as category_name,
-        GROUP_CONCAT(DISTINCT pt.id ORDER BY pt.id SEPARATOR ',') as tag_ids,
-        GROUP_CONCAT(DISTINCT pt.name ORDER BY pt.id SEPARATOR ',') as tag_names,
-        GROUP_CONCAT(DISTINCT ph.url ORDER BY ph.id SEPARATOR ',') as photo_urls
+            p.*,
+            pc.name as category_name
         FROM
-        pets p
-        LEFT JOIN pet_categories pc
-        ON p.category_id = pc.id
-        LEFT JOIN pet_tag_mappings ptm
-        ON p.id = ptm.pet_id
-        LEFT JOIN pet_tags pt
-        ON ptm.tag_id = pt.id
-        LEFT JOIN pet_photos ph
-        ON p.id = ph.pet_id
+            pets p
+        INNER JOIN
+            pet_categories pc
+        ON
+            p.category_id = pc.id
         WHERE
-            EXISTS (
-                SELECT 1
-                FROM
-                    pet_tag_mappings ptm2,
-                    pet_tags pt2
-                WHERE
-                    ptm2.tag_id = pt2.id
-                AND ptm2.pet_id = p.id
-                AND pt2.name IN
-                <foreach item="name" collection="tagNames" open="(" separator="," close=")">
-                    #{name}
+            JSON_CONTAINS(p.tag_ids, JSON_ARRAY(
+                <foreach item="tagId" collection="tagIds" separator=",">
+                    #{tagId}
                 </foreach>
-            )
-        GROUP BY
-        p.id
+        AND
+            p.delete_flg = 0
+        ))
     </select>
 
     <select id="getPetById" resultMap="petResultMap">
         SELECT
-        p.*,
-        pc.name as category_name,
-        GROUP_CONCAT(DISTINCT pt.id ORDER BY pt.id SEPARATOR ',') as tag_ids,
-        GROUP_CONCAT(DISTINCT pt.name ORDER BY pt.id SEPARATOR ',') as tag_names,
-        GROUP_CONCAT(DISTINCT ph.url ORDER BY ph.id SEPARATOR ',') as photo_urls
+            p.*,
+            pc.name as category_name
         FROM
-        pets p
-        LEFT JOIN pet_categories pc
-        ON p.category_id = pc.id
-        LEFT JOIN pet_tag_mappings ptm
-        ON p.id = ptm.pet_id
-        LEFT JOIN pet_tags pt
-        ON ptm.tag_id = pt.id
-        LEFT JOIN pet_photos ph
-        ON p.id = ph.pet_id
+            pets p
+        LEFT JOIN
+            pet_categories pc
+        ON
+            p.category_id = pc.id
         WHERE
-        p.id = #{petId}
-        GROUP BY
-        p.id
+            p.id = #{petId}
+        AND
+            p.delete_flg = 0
     </select>
+
+    <insert id="insert">
+        <selectKey keyProperty="id" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO pets
+        (
+            name,
+            category_id,
+            status,
+            tag_ids,
+            photo_urls
+        )
+        VALUES
+        (
+            #{name},
+            #{categoryId},
+            #{status},
+            #{tagIds, typeHandler=com.example.petstore.api.common.base.converter.mybatis.Json2ListTypeHandler},
+            #{photoUrls, typeHandler=com.example.petstore.api.common.base.converter.mybatis.Json2ListTypeHandler}
+        )
+
+    </insert>
+
+    <update id="update">
+        UPDATE
+            pets
+        SET
+            name = #{name},
+            category_id = #{categoryId},
+            status = #{status},
+            tag_ids = #{tagIds, typeHandler=com.example.petstore.api.common.base.converter.mybatis.Json2ListTypeHandler},
+            photo_urls = #{photoUrls, typeHandler=com.example.petstore.api.common.base.converter.mybatis.Json2ListTypeHandler}
+        WHERE
+            id = #{id}
+        AND
+            delete_flg = 0
+    </update>
+
+    <update id="delete">
+        UPDATE
+            pets
+        SET
+            delete_flg = true
+        WHERE
+            id = #{id}
+        AND
+            delete_flg = 0
+    </update>
 </mapper>

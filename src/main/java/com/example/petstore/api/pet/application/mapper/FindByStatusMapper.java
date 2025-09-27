@@ -24,7 +24,7 @@ public class FindByStatusMapper {
 
     FindPetsByStatusResponseBody responseBody = new FindPetsByStatusResponseBody();
     responseBody.setPager(commonMapper.mapPager(output.getPageInfo()));
-    responseBody.setList(commonMapper.mapPets(output.getPageInfo()));
+    responseBody.setList(commonMapper.mapPets(output.getPageInfo(), output.getPetTagMappings()));
     return responseBody;
   }
 }

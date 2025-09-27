@@ -5,19 +5,14 @@ delete:
   description: Delete a pet.
   operationId: deletePet
   parameters:
-    - name: api_key
-      in: header
-      description: ''
-      required: false
-      schema:
-        type: string
-    - name: petId
+    - name: id
       in: path
-      description: Pet id to delete
+      description: ID of pet to delete
       required: true
       schema:
         type: integer
         format: int64
+        minimum: 1
   responses:
     '200':
       description: Pet deleted

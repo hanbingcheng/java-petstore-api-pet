@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TagEntity {
-  private Long id;
+public class PetTagEntity {
+  private int id;
   private String name;
 }

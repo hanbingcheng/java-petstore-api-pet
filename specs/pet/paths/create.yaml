@@ -9,7 +9,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: "../components/schemas.yaml#/Pet"
+          $ref: "#/schemas/AddPetRequestBody"
     required: true
   responses:
     '200':
@@ -17,8 +17,7 @@ post:
       content:
         application/json:
           schema:
-            $ref: '../components/schemas.yaml#/Pet'
-
+            $ref: "#/schemas/AddPetResponseBody"
     '400':
       description: Invalid input
       content:
@@ -41,3 +40,41 @@ post:
     - petstore_auth:
       - write:pets
       - read:pets
+
+schemas:
+  AddPetRequestBody:
+    type: object
+    required:
+      - name
+      - photoUrls
+    properties:
+      name:
+        type: string
+        example: doggie
+      categoryId:
+        type: integer
+        format: int32
+        minimum: 1
+      photoUrls:
+        type: array
+        items:
+          type: string
+          pattern: "^https?://[\\w.-]+\\.[a-z]{2,}(?::\\d{1,5})?.*\\.(jpg|jpeg|png|gif|bmp|webp)(?:\\?.*)?$"
+          maxLength: 1024
+          example: "https://example.com/aaa.jpg"
+      tags:
+        type: array
+        items:
+          type: integer
+          format: int32
+          minimum: 1
+      status:
+        $ref: '../components/schemas.yaml#/PetStatus'
+
+  AddPetResponseBody:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        example: 1

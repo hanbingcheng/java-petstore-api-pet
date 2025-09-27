@@ -4,22 +4,25 @@ put:
   summary: Update an existing pet.
   description: Update an existing pet by Id.
   operationId: updatePet
+  parameters:
+    - name: id
+      in: path
+      description: ID of pet to update
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
   requestBody:
     description: Update an existent pet in the store
     content:
       application/json:
         schema:
-          $ref: '../components/schemas.yaml#/Pet'
-
+          $ref: "#/schemas/UpdatePetRequestBody"
     required: true
   responses:
     '200':
       description: Successful operation
-      content:
-        application/json:
-          schema:
-            $ref: '../components/schemas.yaml#/Pet'
-
     '400':
       description: Invalid ID supplied
       content:
@@ -48,3 +51,33 @@ put:
     - petstore_auth:
         - write:pets
         - read:pets
+
+schemas:
+  UpdatePetRequestBody:
+    type: object
+    required:
+      - name
+      - photoUrls
+    properties:
+      name:
+        type: string
+        example: doggie
+      categoryId:
+        type: integer
+        format: int32
+        minimum: 1
+      photoUrls:
+        type: array
+        items:
+          type: string
+          pattern: "^https?://[\\w.-]+\\.[a-z]{2,}(?::\\d{1,5})?.*\\.(jpg|jpeg|png|gif|bmp|webp)(?:\\?.*)?$"
+          maxLength: 1024
+          example: "https://example.com/aaa.jpg"
+      tags:
+        type: array
+        items:
+          type: integer
+          format: int32
+          minimum: 1
+      status:
+        $ref: '../components/schemas.yaml#/PetStatus'

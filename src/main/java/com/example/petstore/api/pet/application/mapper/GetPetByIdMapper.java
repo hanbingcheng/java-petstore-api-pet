@@ -27,8 +27,8 @@ public class GetPetByIdMapper {
     category.setId(p.getCategoryId());
     category.setName(p.getCategoryName());
     pet.setCategory(category);
-    pet.setTags(commonMapper.buildTags(p.getTagIdsString(), p.getTagNamesString()));
-    pet.setPhotoUrls(commonMapper.buildPhotoUrls(p.getPhotoUrlsString()));
+    pet.setTags(commonMapper.buildTags(p.getTagIds(), output.getPetTagMappings()));
+    pet.setPhotoUrls(p.getPhotoUrls());
     pet.setStatus(PetStatus.fromValue(p.getStatus()));
 
     return pet;

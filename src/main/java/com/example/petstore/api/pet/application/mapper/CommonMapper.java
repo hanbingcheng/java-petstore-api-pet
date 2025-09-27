@@ -3,11 +3,7 @@ package com.example.petstore.api.pet.application.mapper;
 import com.example.petstore.api.pet.domain.model.PetEntity;
 import com.example.petstore.api.pet.oas.model.*;
 import com.github.pagehelper.PageInfo;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +25,7 @@ public class CommonMapper {
     return pager;
   }
 
-  public List<Pet> mapPets(PageInfo<PetEntity> pageInfo) {
+  public List<Pet> mapPets(PageInfo<PetEntity> pageInfo, Map<Integer, String> tagMappings) {
 
     List<Pet> pets = new ArrayList<>();
     pageInfo.getList().stream()
@@ -42,8 +38,8 @@ public class CommonMapper {
               category.setId(p.getCategoryId());
               category.setName(p.getCategoryName());
               pet.setCategory(category);
-              pet.setTags(buildTags(p.getTagIdsString(), p.getTagNamesString()));
-              pet.setPhotoUrls(buildPhotoUrls(p.getPhotoUrlsString()));
+              pet.setTags(buildTags(p.getTagIds(), tagMappings));
+              pet.setPhotoUrls(p.getPhotoUrls());
               pet.setStatus(PetStatus.fromValue(p.getStatus()));
 
               pets.add(pet);
@@ -51,33 +47,17 @@ public class CommonMapper {
     return pets;
   }
 
-  public List<PetTag> buildTags(String tagIdsString, String tagNamesString) {
+  public List<PetTag> buildTags(List<Integer> tagIds, Map<Integer, String> tagMappings) {
     List<PetTag> tags = new ArrayList<>();
-    if (tagIdsString != null && tagNamesString != null) {
-      String[] idArray = tagIdsString.split(",");
-      String[] nameArray = tagNamesString.split(",");
+    if (tagIds != null && tagMappings != null) {
 
-      int length = Math.min(idArray.length, nameArray.length);
-
-      for (int i = 0; i < length; i++) {
+      for (int id : tagIds) {
         PetTag tag = new PetTag();
-        try {
-          tag.setId(Long.parseLong(idArray[i].trim()));
-        } catch (NumberFormatException e) {
-          continue;
-        }
-        tag.setName(nameArray[i].trim());
+        tag.setId(id);
+        tag.setName(tagMappings.get(id));
         tags.add(tag);
       }
     }
     return tags;
-  }
-
-  public List<String> buildPhotoUrls(String photoUrlsString) {
-    List<String> photoUrls;
-    if (Objects.isNull(photoUrlsString)) {
-      return new ArrayList<>();
-    }
-    return Arrays.stream(photoUrlsString.split(",")).map(String::trim).collect(Collectors.toList());
   }
 }
