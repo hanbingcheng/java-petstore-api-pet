@@ -9,11 +9,11 @@
         <result property="categoryId" column="category_id"/>
         <result property="status" column="status"/>
         <result property="categoryName" column="category_name" />
-        <result property="tagIds" column="tag_ids" typeHandler="com.example.petstore.api.common.base.converter.mybatis.Json2ListTypeHandler"/>
-        <result property="photoUrls" column="photo_urls" typeHandler="com.example.petstore.api.common.base.converter.mybatis.Json2ListTypeHandler"/>
+        <result property="tagIds" column="tag_ids" typeHandler="com.example.petstore.common.core.base.converter.mybatis.Json2ListTypeHandler"/>
+        <result property="photoUrls" column="photo_urls" typeHandler="com.example.petstore.common.core.base.converter.mybatis.Json2ListTypeHandler"/>
     </resultMap>
 
-    <select id="findByStatus" resultMap="petResultMap">
+    <select id="findPets" resultMap="petResultMap">
         SELECT
             p.*,
             pc.name as category_name
@@ -23,6 +23,14 @@
             ON p.category_id = pc.id
         WHERE
             p.status = #{status}
+        <if test="tagIds != null">
+        AND
+            JSON_CONTAINS(p.tag_ids, JSON_ARRAY(
+            <foreach item="tagId" collection="tagIds" separator=",">
+                #{tagId}
+            </foreach>
+            ))
+        </if>
         AND
             p.delete_flg = 0
     </select>
@@ -42,9 +50,9 @@
                 <foreach item="tagId" collection="tagIds" separator=",">
                     #{tagId}
                 </foreach>
+        ))
         AND
             p.delete_flg = 0
-        ))
     </select>
 
     <select id="getPetById" resultMap="petResultMap">
@@ -80,8 +88,8 @@
             #{name},
             #{categoryId},
             #{status},
-            #{tagIds, typeHandler=com.example.petstore.api.common.base.converter.mybatis.Json2ListTypeHandler},
-            #{photoUrls, typeHandler=com.example.petstore.api.common.base.converter.mybatis.Json2ListTypeHandler}
+            #{tagIds, typeHandler=com.example.petstore.common.core.base.converter.mybatis.Json2ListTypeHandler},
+            #{photoUrls, typeHandler=com.example.petstore.common.core.base.converter.mybatis.Json2ListTypeHandler}
         )
 
     </insert>
@@ -93,8 +101,8 @@
             name = #{name},
             category_id = #{categoryId},
             status = #{status},
-            tag_ids = #{tagIds, typeHandler=com.example.petstore.api.common.base.converter.mybatis.Json2ListTypeHandler},
-            photo_urls = #{photoUrls, typeHandler=com.example.petstore.api.common.base.converter.mybatis.Json2ListTypeHandler}
+            tag_ids = #{tagIds, typeHandler=com.example.petstore.common.core.base.converter.mybatis.Json2ListTypeHandler},
+            photo_urls = #{photoUrls, typeHandler=com.example.petstore.common.core.base.converter.mybatis.Json2ListTypeHandler}
         WHERE
             id = #{id}
         AND

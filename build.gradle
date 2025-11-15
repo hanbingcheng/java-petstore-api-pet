@@ -70,7 +70,10 @@ dependencies {
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 
     // petstore
-    implementation ('com.example.petstore:api-common:0.0.9') {
+    implementation ('com.example.petstore:common-core:0.1.0') {
+		exclude module: 'mybatis-spring-boot-starter'
+	}
+	implementation ('com.example.petstore:common-api:0.1.0') {
 		exclude module: 'mybatis-spring-boot-starter'
 	}
 }
@@ -115,7 +118,7 @@ processResources {
 }
 
 // OpenApiによる自動生成
-task openApiGenerateUsers(type: GenerateTask) {
+task openApiGeneratePets(type: GenerateTask) {
 	generatorName = "spring"
 	inputSpec = "$rootDir/specs/pet/pet.yaml"
 	outputDir = "${layout.buildDirectory.get().asFile}/oas-generate"
@@ -140,7 +143,7 @@ task openApiGenerateUsers(type: GenerateTask) {
 	]
 }
 
-task openApiGenerateAll(dependsOn: ['clean', 'openApiGenerateUsers']) {}
+task openApiGenerateAll(dependsOn: ['clean', 'openApiGeneratePets']) {}
 
 // タスク制御
 compileJava.dependsOn tasks.openApiGenerateAll

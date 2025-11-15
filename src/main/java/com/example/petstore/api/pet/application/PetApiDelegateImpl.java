@@ -15,11 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class PetApiDelegateImpl implements PetApiDelegate {
 
-  private final FindByStatusMapper findByStatusMapper;
-  private final FindByStatusService findByStatusService;
-
-  private final FindByTagsMapper findBytagsMapper;
-  private final FindByTagsService findByTagsService;
+  private final FindPetsMapper findPetsMapper;
+  private final FindPetsService findPetsService;
 
   private final GetPetByIdMapper getPetByIdMapper;
   private final GetPetByIdService getPetByIdService;
@@ -33,19 +30,11 @@ public class PetApiDelegateImpl implements PetApiDelegate {
   private final DeletePetService deletePetService;
 
   @Override
-  public ResponseEntity<FindPetsByStatusResponseBody> findPetsByStatus(
-      PetStatus status, Integer pageNum, Integer pageSize) {
-    FindByStatusServiceInput input = findByStatusMapper.map(status, pageNum, pageSize);
-    FindByStatusServiceOutput output = findByStatusService.execute(input);
-    return new ResponseEntity<>(findByStatusMapper.map(output), HttpStatus.OK);
-  }
-
-  @Override
-  public ResponseEntity<FindPetsByTagsResponseBody> findPetsByTags(
-      List<String> tags, Integer pageNum, Integer pageSize) {
-    FindByTagsServiceInput input = findBytagsMapper.map(tags, pageNum, pageSize);
-    FindByTagsServiceOutput output = findByTagsService.execute(input);
-    return new ResponseEntity<>(findBytagsMapper.map(output), HttpStatus.OK);
+  public ResponseEntity<FindPetsResponseBody> findPets(
+      PetStatus status, List<String> tags, Integer pageNum, Integer pageSize) {
+    FindPetsServiceInput input = findPetsMapper.map(status, tags, pageNum, pageSize);
+    FindPetsServiceOutput output = findPetsService.execute(input);
+    return new ResponseEntity<>(findPetsMapper.map(output), HttpStatus.OK);
   }
 
   @Override

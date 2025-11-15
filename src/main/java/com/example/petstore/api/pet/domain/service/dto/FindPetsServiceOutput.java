@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class FindByTagsServiceOutput {
+public class FindPetsServiceOutput {
   private PageInfo<PetEntity> pageInfo;
   private Map<Integer, String> petTagMappings;
 }
