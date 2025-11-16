@@ -24,5 +24,3 @@ paths:
     $ref: ./paths/update.yaml
   /pet/{id}/delete:
     $ref: ./paths/delete.yaml
-  /pet/{id}/uploadImage:
-    $ref: ./paths/uploadImage.yaml

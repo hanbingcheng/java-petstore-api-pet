@@ -2,10 +2,10 @@ import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.4'
+	id 'org.springframework.boot' version '3.5.7'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'com.diffplug.spotless' version '6.25.0'
-	id 'com.github.spotbugs' version '6.0.7'
+	id 'com.github.spotbugs' version '6.0.8'
 	id 'org.openapi.generator' version '7.14.0'
 }
 
@@ -120,7 +120,7 @@ processResources {
 // OpenApiによる自動生成
 task openApiGeneratePets(type: GenerateTask) {
 	generatorName = "spring"
-	inputSpec = "$rootDir/specs/pet/pet.yaml"
+	inputSpec = "$rootDir/specs/pet.yaml"
 	outputDir = "${layout.buildDirectory.get().asFile}/oas-generate"
 	apiPackage = "com.example.petstore.api.pet.oas.api"
 	invokerPackage = "com.example.petstore.api.pet.oas.invoker"
