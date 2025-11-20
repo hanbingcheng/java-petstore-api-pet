@@ -1,0 +1,45 @@
+# rdbms
+spring:
+  datasource:
+    driver-class-name: software.aws.rds.jdbc.mysql.Driver
+    url: jdbc:mysql://localhost:3306/petstore?useSSL=false&useCursorFetch=true&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    hikari:
+      auto-commit: false
+      maximum-pool-size: 5
+      minimum-idle: 5
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      timeout: 2000ms
+  messages:
+    basename: cmm-core-log-message,cmc-response-message
+  main:
+    banner-mode: off
+
+# PageHelper\u8A2D\u5B9A
+pagehelper:
+  helper-dialect: mysql
+  row-bounds-with-count: true
+  page-size-zero: false
+  reasonable: false
+  offset-as-page-num: false
+  support-methods-arguments: true
+  params=count: countSql
+  debug: true
+
+mybatis:
+  configuration:
+    callSettersOnNulls: true
+    map-underscore-to-camel-case: true
+    returnInstanceForEmptyRow: true
+
+log:
+  level:
+    petstore: DEBUG
+
+server:
+  port: 8083
